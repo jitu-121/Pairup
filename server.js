@@ -1,14 +1,37 @@
-const express=require("express");
+const express = require("express");
 
-const app=express();
+const app = express();
 
+// Middleware to parse JSON bodies
+app.use(express.json());
 
-app.use("/",(req,res)=>{
-    res.send("hello ");
+// GET /user
+app.get("/user", (req, res) => {
+  res.send({
+    firstName: "Akshay",
+    lastName: "Saini"
+  });
 });
-app.use("/hello",(req,res)=>{
-    res.send("hello from server");
+
+// POST /user
+app.post("/user", async (req, res) => {
+  console.log(req.body);
+
+  // saving data to DB (mock)
+  res.send("Data successfully saved to the database!");
 });
 
+// DELETE /user
+app.delete("/user", (req, res) => {
+  res.send("Deleted successfully!");
+});
 
-app.listen(3000);
+// This will match ALL HTTP methods for /test
+app.use("/test", (req, res) => {
+  res.send("Hello from the server!");
+});
+
+// Start server
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
