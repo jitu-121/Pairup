@@ -1,5 +1,5 @@
 {
-  "name": "devtinder",
+  "name": "pair-up",
   "version": "1.0.0",
   "description": "tinder for devs",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "nodejs",
     "javascript"
   ],
-  "author": "Akshay Saini",
+  "author": "jitendra baravkar",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2"
