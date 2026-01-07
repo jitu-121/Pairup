@@ -6,10 +6,10 @@ const User=require("./models/user");
 
 app.post("/signup",async(req,res)=>{
 const user=new User({
-  firstName:"Jitendra",
+  firstName:"virat",
   lastName:"Baravkar",
-  emailId:"jitu@gmail.com",
-  password:"jitendra@1234",
+  emailId:"virat@gmail.com",
+  password:"virat@1234",
 });
 await user.save();
 res.send("database saved succesfully");
