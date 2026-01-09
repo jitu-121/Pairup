@@ -6,7 +6,7 @@ const User=require("./models/user");
 
 app.post("/signup",async(req,res)=>{
 const user=new User({
-  firstName:"virat",
+  firstName:"mithun",
   lastName:"Baravkar",
   emailId:"virat@gmail.com",
   password:"virat@1234",
