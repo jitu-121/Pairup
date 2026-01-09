@@ -1,5 +1,6 @@
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
-const connectDB=require("../config/database.js");
+const connectDB=require("./config/database.js");
 const app = express();
 const User=require("./models/user");
  
@@ -22,7 +23,7 @@ connectDB().then(()=>{
 });
 
 }).catch((err)=>{
-   console.error("not connected"); 
+   console.error("Database connection failed:", err); 
 }); 
 
 
