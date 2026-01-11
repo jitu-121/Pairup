@@ -10,7 +10,7 @@ app.post("/signup",async(req,res)=>{
   console.log(req.body);
 const user=new User(req.body);
 await user.save();
-res.send("database saved succesfully");
+res.send("database saved succesfullyy");
 });
 
 
