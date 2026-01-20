@@ -24,6 +24,32 @@ else{
   res.status(400).send("something wet wrong");
  }
 })
+// Update data of the user 
+app.patch("/user", async (req, res) => { 
+  const userId = req.body.userId; 
+  const data = req.body;
+   try{ 
+    const user = await User. findByIdAndUpdate({ _id: userId }, data);
+     console. log(user) ;
+      res.send("User updated successfully");
+    }
+     catch (err)
+      { 
+        res.status(400).send("Something went wrong ");  
+      }
+    });
+//delete a user form the database
+app.delete("/user", async(req,res)=>{
+  const Userid=req.body.userId;
+ try
+ {
+    await User.findByIdAndDelete(Userid)
+res.send("user Deleted ")
+ } 
+ catch(err){
+  res.status(400).send("something went wrong");
+ }
+})
 app.get("/feed", async(req,res)=>{
  try
  {
