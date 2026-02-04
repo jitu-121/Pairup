@@ -25,19 +25,20 @@ else{
  }
 })
 // Update data of the user 
-app.patch("/user", async (req, res) => { 
-  const userId = req.body.userId; 
+app.patch("/user", async (req, res) => {
+  const userId = req.body.userId;
   const data = req.body;
-   try{ 
-    const user = await User. findByIdAndUpdate({ _id: userId }, data);
-     console. log(user) ;
-      res.send("User updated successfully");
-    }
-     catch (err)
-      { 
-        res.status(400).send("Something went wrong ");  
-      }
+  try {
+    const user = await User.findByIdAndUpdate({ _id: userId }, data, {
+      returnDocument: "after",
+      runValidators: true,
     });
+    console.log(user);
+    res.send("User updated successfully");
+  } catch (err) {
+    res.status(400).send("UPDATE FAILED:" + err.message);
+  }
+}); 
 //delete a user form the database
 app.delete("/user", async(req,res)=>{
   const Userid=req.body.userId;
@@ -63,11 +64,16 @@ const user=await User.find({});
 
 
 
-app.post("/signup",async(req,res)=>{
-  console.log(req.body);
-const user=new User(req.body);
-await user.save();
-res.send("database saved succesfullyy");
+app.post("/signup", async (req, res) => {
+  //   Creating a new instance of the User model
+  const user = new User(req.body);
+
+  try {
+    await user.save();
+    res.send("User Added successfully!");
+  } catch (err) {
+    res.status(400).send("Error saving the user:" + err.message);
+  }
 });
 
 
