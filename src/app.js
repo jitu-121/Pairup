@@ -3,6 +3,7 @@ const express = require("express");
 const connectDB=require("./config/database.js");
 const app = express();
 const User=require("./models/user");
+
  
 app.use(express.json());
 
@@ -25,10 +26,21 @@ else{
  }
 })
 // Update data of the user 
-app.patch("/user", async (req, res) => {
-  const userId = req.body.userId;
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params?.userId;
   const data = req.body;
+
   try {
+    const ALLOWED_UPDATES = ["photourl", "about", "gender", "age", "skills"];
+    const isUpdateAllowed = Object.keys(data).every((k) =>
+      ALLOWED_UPDATES.includes(k)
+    );
+    if (!isUpdateAllowed) {
+      throw new Error("Update not allowed");
+    }
+    if (data.skills && data.skills.length > 10) {
+  throw new Error("Skills cannot be more than 10");
+}
     const user = await User.findByIdAndUpdate({ _id: userId }, data, {
       returnDocument: "after",
       runValidators: true,
@@ -38,7 +50,7 @@ app.patch("/user", async (req, res) => {
   } catch (err) {
     res.status(400).send("UPDATE FAILED:" + err.message);
   }
-}); 
+});
 //delete a user form the database
 app.delete("/user", async(req,res)=>{
   const Userid=req.body.userId;
@@ -69,6 +81,10 @@ app.post("/signup", async (req, res) => {
   const user = new User(req.body);
 
   try {
+    if(user?.emailId.length>70)
+    {
+      throw new Error("plz enter a email shorter than 70 characters");
+    }
     await user.save();
     res.send("User Added successfully!");
   } catch (err) {
