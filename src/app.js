@@ -3,7 +3,8 @@ const express = require("express");
 const connectDB=require("./config/database.js");
 const app = express();
 const User=require("./models/user");
-
+const {ValidateSignUpData}=require("./utils/validation.js");
+const bcrypt= require("bcrypt");
  
 app.use(express.json());
 
@@ -74,21 +75,50 @@ const user=await User.find({});
  }
 })
 
+app.post("/login",async(req,res)=>{
+  try{
+    const{emailId,password}=req.body;
+    const user= await User.findOne({emailId:emailId});
+     console.log(user);
+    if(!user)
+    {
+      throw new Error("user does not exist");
+    }
+    const isPasswordvalid=await bcrypt.compare(password,user.password);
 
+    if(isPasswordvalid)
+    {
+      res.send("user logged successfully");
+    }
+    else {
+      throw new Error("password is incorrect");
+    }
+
+  }
+  catch(err){
+    res.status(400).send("email or password is incorrect "+ err.message)
+  }
+})
 
 app.post("/signup", async (req, res) => {
-  //   Creating a new instance of the User model
-  const user = new User(req.body);
-
-  try {
-    if(user?.emailId.length>70)
+ try {
+  ValidateSignUpData(req)
+  const {firstName,lastName,emailId,password}=req.body;
+  const hashedPassword= await bcrypt.hash(password,10);
+  const user = new User({
+    firstName,
+    lastName,
+    emailId,
+    password:hashedPassword,
+  });
+  if(user?.emailId.length>70)
     {
       throw new Error("plz enter a email shorter than 70 characters");
     }
     await user.save();
     res.send("User Added successfully!");
   } catch (err) {
-    res.status(400).send("Error saving the user:" + err.message);
+    res.status(400).send("Error:" + err.message);
   }
 });
 
