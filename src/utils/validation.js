@@ -18,8 +18,18 @@ const ValidateSignUpData=(req) =>
         throw new Error("Not a valid password!");
     }
 };
+const validateEditFields = (req) => {
+    const allowed_updates = ["firstName", "lastName", "age", "photoUrl", "about", "skills"];
+
+    const isUpdateAllowed = Object.keys(req.body).every((field) =>
+        allowed_updates.includes(field)
+    );
+
+    return isUpdateAllowed;
+};
 
 module.exports=
 {
     ValidateSignUpData,
+    validateEditFields,
 }
