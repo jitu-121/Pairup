@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const validator=require("validator");
+const jwt=require("jsonwebtoken");
+const bcrypt= require("bcrypt");
 const userSchema = new mongoose.Schema({
    firstName: {
       type: String,
@@ -73,8 +75,18 @@ const userSchema = new mongoose.Schema({
    },
 },{timestamps:true,});
 
-// Ensure a unique index exists at the database level
-userSchema.index({ emailId: 1 }, { unique: true });
+userSchema.methods.getJWT=async function(){
+   const user=this;
+   const token=await jwt.sign({_id:user._id},"Pairup@777",{expiresIn:"7d"});
+   return token; 
+};
+
+userSchema.methods.validatePassword=async function(passwordInputByuser){
+const user=this;
+const hashedPasswprd=user.password;
+const isPasswordValid=await bcrypt.compare(passwordInputByuser,hashedPasswprd);
+return isPasswordValid;
+}
 
 const User = mongoose.model("User", userSchema);
 
