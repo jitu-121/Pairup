@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
    firstName: {
       type: String,
       required: true,
-      unique:true,
+      index:true,
       minLength:3,
       maxLength:50,
    },
@@ -80,6 +80,7 @@ userSchema.methods.getJWT=async function(){
    const token=await jwt.sign({_id:user._id},"Pairup@777",{expiresIn:"7d"});
    return token; 
 };
+userSchema.index({ firstnName: 1, lastName: 1 })
 
 userSchema.methods.validatePassword=async function(passwordInputByuser){
 const user=this;
