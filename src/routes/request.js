@@ -56,9 +56,41 @@ reqRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>
            res.json({message:`${req.user.firstName} send connection request to the ${to_user.firstName}`,
             data
            })
-           
+
   }
   catch(err)
+  {
+    res.status(400).json("ERROR : "+err.message);
+  }
+})
+
+reqRouter.post("/request/review/:status/:requestId",userAuth,async(req,res)=>
+{
+  try{
+    const loggedUser=req.user;
+  const {status,requestId}=req.params;
+  const allowedstatus=["accepted","rejected"];
+
+  if(!allowedstatus.includes(status))
+  {
+     return res.status(400).json({message : "invalid status type"+ status});
+  }
+
+  const connectionrequest=await ConnectionRequest.findOne({
+    _id:requestId,
+    toUserId:loggedUser,
+    status:"interested"
+  })
+  if(!connectionrequest)
+  {
+    return res.status(400).json({message: "connection request not found"});
+  }
+  connectionrequest.status=status;
+  const data= await connectionrequest.save();
+  res.json({message:"Connection request "+status,data});
+ }
+
+ catch(err)
   {
     res.status(400).json("ERROR : "+err.message);
   }
