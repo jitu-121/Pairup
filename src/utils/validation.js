@@ -19,7 +19,7 @@ const ValidateSignUpData=(req) =>
     }
 };
 const validateEditFields = (req) => {
-    const allowed_updates = ["firstName", "lastName", "age", "photoUrl", "about", "skills"];
+    const allowed_updates = ["firstName", "lastName", "age", "photoUrl", "about", "skills","gender"];
 
     const isUpdateAllowed = Object.keys(req.body).every((field) =>
         allowed_updates.includes(field)

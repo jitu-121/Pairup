@@ -55,9 +55,9 @@ const userSchema = new mongoose.Schema({
          }
       },
    },
-   photourl:{
+   photoUrl:{
       type: String,
-      default:"https://pixabay.com/vectors/blank-profile-picture-mystery-man-973460",
+      default:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjDWJp3jj9qzU2I-VHHBazKCizlOQKFofCT2NxVA_smXMdFuh1Nea6XQQ&s",
       validate(value)
       {
          if(!validator.isURL(value))

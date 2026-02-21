@@ -67,14 +67,16 @@ userRouter.get("/feed",userAuth,async(req,res)=>
   ]
 }).select("fromUserId toUserId");
 
+// build a set of user IDs to hide from the feed – anyone you have a request with
 const hideUsersFromFeed = new Set();
 
-connectionRequests.forEach((req) => {
-  // (You likely add user IDs here to hide from feed)
-  // Example:
-  // hideUsersFromFeed.add(req.fromUserId.toString());
-  // hideUsersFromFeed.add(req.toUserId.toString());
+connectionRequests.forEach((r) => {
+  if (r.fromUserId) hideUsersFromFeed.add(r.fromUserId.toString());
+  if (r.toUserId) hideUsersFromFeed.add(r.toUserId.toString());
 });
+
+// also exclude self explicitly (redundant but harmless)
+hideUsersFromFeed.add(loggedInUser._id.toString());
 
 const users = await User.find({
   $and: [
@@ -85,7 +87,8 @@ const users = await User.find({
   .skip(skip)
   .limit(limit);
 
-res.send(users);
+// send back an object to match the common response shape used elsewhere
+res.json({ data: users });
 
 } catch (err) {
   res.status(400).json({ message: err.message });
